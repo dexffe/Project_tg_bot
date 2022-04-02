@@ -108,7 +108,7 @@ def num(message):
 
 
 def reg_text(message):
-    bot.send_message(message.from_user.id, 'lox')
+    bot.send_message(message.from_user.id, 'Artemi')
 
 
 bot.polling()
