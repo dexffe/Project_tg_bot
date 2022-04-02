@@ -22,7 +22,7 @@ def send_welcome(message):
                      reply_markup=keyboard0)
 
 
-@bot.message_handler(commands=['info'])
+@bot.message_handler(commands=['info', 'back'])
 def send_welcome(message):
     if os.path.isfile("translate_text.txt"):
         os.remove("translate_text.txt")
@@ -61,7 +61,7 @@ def translate(message):
         bot.send_message(message.from_user.id, 'Введите текст:')
         bot.register_next_step_handler(message, transl)
     elif message.text == '/emoticons':
-        bot.send_message(message.from_user.id, interpreter_translate.translate_emoticons(message))
+        bot.send_message(message.from_user.id, interpreter_translate.translate_base(message))
     elif message.text == '/crypto':
         bot.send_message(message.from_user.id, interpreter_translate.translate_crypto(message))
     try:
