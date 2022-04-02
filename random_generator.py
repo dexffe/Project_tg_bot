@@ -15,5 +15,5 @@ def generator_login_password():
     for _ in range(random.randint(7, 13)):
         log += random.choice(list('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'))
     for _ in range(random.randint(7, 13)):
-        pas += random.choice(list('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890&$'))
+        pas += random.choice(list('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890&$#?'))
     return '\n'.join(['Логин: ' + log + '@mail.ru', 'Пароль: ' + pas])
