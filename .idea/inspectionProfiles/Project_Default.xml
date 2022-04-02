@@ -1,0 +1,47 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="LossyEncoding" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="PyRedeclarationInspection" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="PyShadowingBuiltinsInspection" enabled="true" level="WEAK WARNING" enabled_by_default="true">
+      <option name="ignoredNames">
+        <list>
+          <option value="exit" />
+        </list>
+      </option>
+    </inspection_tool>
+    <inspection_tool class="PyStubPackagesAdvertiser" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoredPackages">
+        <list>
+          <option value="PyQt5-stubs==5.15.2.0" />
+        </list>
+      </option>
+    </inspection_tool>
+    <inspection_tool class="PyUnboundLocalVariableInspection" enabled="false" level="WARNING" enabled_by_default="false" />
+    <inspection_tool class="PyUnresolvedReferencesInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoredIdentifiers">
+        <list>
+          <option value="PyQt5.QtGui.*" />
+          <option value="PyQt5.QtWidgets.clicked.connect" />
+          <option value="os.path" />
+          <option value="player.all_sprites" />
+          <option value="player.COUNT_MONEY" />
+          <option value="Menu.*" />
+          <option value="schedule.every" />
+          <option value="schedule.run_pending" />
+          <option value="schedule.CancelJob" />
+          <option value="main.*" />
+          <option value="urllib2" />
+          <option value="pythonProject_sql.data.users.sqlalchemy_serializer" />
+          <option value="alembic.context" />
+          <option value="data.news.sqlalchemy_serializer" />
+          <option value="data.users.*" />
+          <option value="data.news_resources" />
+          <option value="data.news_api" />
+          <option value="waiters" />
+          <option value="vk_api" />
+        </list>
+      </option>
+    </inspection_tool>
+  </profile>
+</component>
