@@ -11,7 +11,7 @@ keyboard4 = telebot.types.ReplyKeyboardMarkup(True)
 keyboard0 = telebot.types.ReplyKeyboardMarkup(True)
 keyboard1.row('/generator', '/interpreter', '/news', '/image')
 keyboard2.row('/info', '/money', '/number', '/l_p')
-keyboard3.row('/info', '/translation', '/emoticons', '/crypto')
+keyboard3.row('/info', '/translation', '/num_sys', '/crypto')
 keyboard4.row('/info', '/Russian', '/English', '/French')
 keyboard0.row('/info')
 
@@ -41,7 +41,7 @@ def echo_all(message):
                          '"/l_p" - логин и пароль', reply_markup=keyboard2)
     elif message.text == '/interpreter':
         bot.send_message(message.from_user.id, '"/translation" - перевод текста' + '\n' + '\n' +
-                         '"/emoticons" - перевести текст в смайлики' + '\n' + '\n' +
+                         '"/num_sys" - перевод чисел в разные системы счисления' + '\n' + '\n' +
                          '"/crypto" - перевод валюты в криптовалюту', reply_markup=keyboard3)
     elif message.text == '/news':
         bot.send_message(message.from_user.id, 'news')
@@ -60,8 +60,9 @@ def translate(message):
     if message.text == '/translation':
         bot.send_message(message.from_user.id, 'Введите текст:')
         bot.register_next_step_handler(message, transl)
-    elif message.text == '/emoticons':
-        bot.send_message(message.from_user.id, interpreter_translate.translate_emoticons(message))
+    elif message.text == '/num_sys':
+        bot.send_message(message.from_user.id, 'Введите число:')
+        bot.register_next_step_handler(message, numersys)
     elif message.text == '/crypto':
         bot.send_message(message.from_user.id, interpreter_translate.translate_crypto(message))
     try:
@@ -88,6 +89,29 @@ def tran(message):
         bot.send_message(message.from_user.id, interpreter_translate.translate_text(text, 'en'))
     elif message.text == '/French':
         bot.send_message(message.from_user.id, interpreter_translate.translate_text(text, 'fr'))
+
+
+def numersys(message):
+    with open('translate_numb.txt', 'w', encoding='utf-8') as q:
+        q.write(message.text)
+    bot.send_message(message.from_use.id, "Из какой системы счисления в какую перевести" + '\n' +
+                                          "Напишите 2 числа через пробел")
+    bot.register_next_step_handler(message, numer_sys)
+    bot.send_message(message.from_use.id, "Из какой системы счисления в какую перевести" + '\n' +
+                     "Напишите 2 числа через пробел")
+    bot.register_next_step_handler(message, numer_sys)
+
+
+def numer_sys(message):
+    with open('translate_text.txt', encoding='utf-8') as q:
+        text = q.read()
+    if message.text == '/Russian':
+        bot.send_message(message.from_user.id, interpreter_translate.translate_text(text, 'ru'))
+    elif message.text == '/English':
+        bot.send_message(message.from_user.id, interpreter_translate.translate_text(text, 'en'))
+    elif message.text == '/French':
+        bot.send_message(message.from_user.id, interpreter_translate.translate_text(text, 'fr'))
+
 
 
 @bot.message_handler(func=lambda message: True)
