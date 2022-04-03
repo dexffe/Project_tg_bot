@@ -94,23 +94,18 @@ def tran(message):
 def numersys(message):
     with open('translate_numb.txt', 'w', encoding='utf-8') as q:
         q.write(message.text)
-    bot.send_message(message.from_use.id, "Из какой системы счисления в какую перевести" + '\n' +
-                                          "Напишите 2 числа через пробел")
-    bot.register_next_step_handler(message, numer_sys)
-    bot.send_message(message.from_use.id, "Из какой системы счисления в какую перевести" + '\n' +
-                     "Напишите 2 числа через пробел")
+    bot.send_message(message.from_user.id, "Из какой системы счисления в какую перевести?" + '\n' +
+                     "Напишите 2 числа через пробел.")
     bot.register_next_step_handler(message, numer_sys)
 
 
 def numer_sys(message):
-    with open('translate_text.txt', encoding='utf-8') as q:
-        text = q.read()
-    if message.text == '/Russian':
-        bot.send_message(message.from_user.id, interpreter_translate.translate_text(text, 'ru'))
-    elif message.text == '/English':
-        bot.send_message(message.from_user.id, interpreter_translate.translate_text(text, 'en'))
-    elif message.text == '/French':
-        bot.send_message(message.from_user.id, interpreter_translate.translate_text(text, 'fr'))
+    with open('translate_numb.txt', encoding='utf-8') as q:
+        number = q.read()
+    from_base = int(message.text.split()[0])
+    to_base = int(message.text.split()[1])
+    a = int(number, from_base)
+    bot.send_message(message.from_user.id, interpreter_translate.translate_base(a, to_base))
 
 
 @bot.message_handler(func=lambda message: True)
