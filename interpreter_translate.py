@@ -6,12 +6,15 @@ def translate_text(text, target):
 
 
 def translate_base(num, base):
-    alpha = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-    b = alpha[num % base]
-    while num >= base:
-        num = num // base
-        b += alpha[num % base]
-    return b[::-1]
+    try:
+        alpha = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        b = alpha[num % base]
+        while num >= base:
+            num = num // base
+            b += alpha[num % base]
+        return b[::-1]
+    except Exception:
+        return hex(num)
 
 
 def translate_crypto(text):

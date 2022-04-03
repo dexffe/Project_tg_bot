@@ -104,8 +104,13 @@ def numer_sys(message):
         number = q.read()
     from_base = int(message.text.split()[0])
     to_base = int(message.text.split()[1])
-    a = int(number, from_base)
+    try:
+        a = int(number, from_base)
+    except Exception:
+        a = number
     bot.send_message(message.from_user.id, interpreter_translate.translate_base(a, to_base))
+    bot.send_message(message.from_user.id, 'Введите число:')
+    bot.register_next_step_handler(message, numersys)
 
 
 @bot.message_handler(func=lambda message: True)
