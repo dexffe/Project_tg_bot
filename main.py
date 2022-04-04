@@ -1,4 +1,5 @@
 import os
+from news import news_weather
 import telebot
 import random_generator
 import interpreter_translate
@@ -8,11 +9,13 @@ keyboard1 = telebot.types.ReplyKeyboardMarkup(True)
 keyboard2 = telebot.types.ReplyKeyboardMarkup(True)
 keyboard3 = telebot.types.ReplyKeyboardMarkup(True)
 keyboard4 = telebot.types.ReplyKeyboardMarkup(True)
+keyboard5 = telebot.types.ReplyKeyboardMarkup(True)
 keyboard0 = telebot.types.ReplyKeyboardMarkup(True)
 keyboard1.row('/generator', '/interpreter', '/news', '/image')
 keyboard2.row('/info', '/money', '/number', '/l_p')
 keyboard3.row('/info', '/translation', '/num_sys', '/crypto')
 keyboard4.row('/info', '/Russian', '/English', '/French')
+keyboard5.row('/info', '/#####', '/#####', '/weather')
 keyboard0.row('/info')
 
 
@@ -44,7 +47,9 @@ def echo_all(message):
                          '"/num_sys" - перевод чисел в разные системы счисления' + '\n' + '\n' +
                          '"/crypto" - перевод валюты в криптовалюту', reply_markup=keyboard3)
     elif message.text == '/news':
-        bot.send_message(message.from_user.id, 'news')
+        bot.send_message(message.from_user.id, '"/######" - о главном в России за сутки' + '\n' + '\n' +
+                         '"/######" - важные события из игровой индустрии' + '\n' + '\n' +
+                         '"/weather" - погода', reply_markup=keyboard5)
     elif message.text == '/image':
         bot.send_message(message.from_user.id, 'image')
     try:
@@ -54,6 +59,20 @@ def echo_all(message):
         image(message)
     except Exception:
         pass
+
+
+def news(message):
+    if message.text == '/########':
+        pass
+    elif message.text == '/#########':
+        pass
+    elif message.text == '/weather':
+        bot.send_message(message.from_user.id, 'Введите город в котором хотите узнать погоду:')
+        bot.register_next_step_handler(message, city)
+
+
+def city(message):
+    bot.send_message(message.from_user.id, news_weather(message))
 
 
 def translate(message):
