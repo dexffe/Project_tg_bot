@@ -10,12 +10,14 @@ keyboard2 = telebot.types.ReplyKeyboardMarkup(True)
 keyboard3 = telebot.types.ReplyKeyboardMarkup(True)
 keyboard4 = telebot.types.ReplyKeyboardMarkup(True)
 keyboard5 = telebot.types.ReplyKeyboardMarkup(True)
+keyboard7 = telebot.types.ReplyKeyboardMarkup(True)
 keyboard0 = telebot.types.ReplyKeyboardMarkup(True)
 keyboard1.row('/generator', '/interpreter', '/news', '/image')
 keyboard2.row('/info', '/money', '/number', '/l_p')
-keyboard3.row('/info', '/translation', '/num_sys', '/crypto')
+keyboard3.row('/info', '/translation', '/num_sys', '/cash')
 keyboard4.row('/info', '/Russian', '/English', '/French')
 keyboard5.row('/info', '/#####', '/#####', '/weather')
+keyboard7.row('/info', '/usd', '/eur', '/cny')
 keyboard0.row('/info')
 
 
@@ -45,7 +47,7 @@ def echo_all(message):
     elif message.text == '/interpreter':
         bot.send_message(message.from_user.id, '"/translation" - перевод текста' + '\n' + '\n' +
                          '"/num_sys" - перевод чисел в разные системы счисления' + '\n' + '\n' +
-                         '"/crypto" - перевод валюты в криптовалюту', reply_markup=keyboard3)
+                         '"/cash" - перевод рублей в иностранную валюту', reply_markup=keyboard3)
     elif message.text == '/news':
         bot.send_message(message.from_user.id, '"/######" - о главном в России за сутки' + '\n' + '\n' +
                          '"/######" - важные события из игровой индустрии' + '\n' + '\n' +
@@ -53,12 +55,39 @@ def echo_all(message):
     elif message.text == '/image':
         bot.send_message(message.from_user.id, 'image')
     try:
+        all_info(message)
         generator(message)
         translate(message)
         news(message)
         image(message)
     except Exception:
         pass
+
+
+# def all_info(message):
+#     if message.text == '/money':
+#         bot.send_message(message.from_user.id, random_generator.generator_money())
+#     elif message.text == '/number':
+#         bot.send_message(message.from_user.id, 'Введите 2 числа через пробел:')
+#         bot.register_next_step_handler(message, num)
+#     elif message.text == '/l_p':
+#         bot.send_message(message.from_user.id, random_generator.generator_login_password())
+#     elif message.text == '/translation':
+#         bot.send_message(message.from_user.id, 'Введите текст:')
+#         bot.register_next_step_handler(message, transl)
+#     elif message.text == '/num_sys':
+#         bot.send_message(message.from_user.id, 'Введите число:')
+#         bot.register_next_step_handler(message, numersys)
+#     elif message.text == '/cash':
+#         bot.send_message(message.from_user.id, 'Введите сумму в рублях:')
+#         bot.register_next_step_handler(message, cash)
+#     elif message.text == '/########':
+#         pass
+#     elif message.text == '/#########':
+#         pass
+#     elif message.text == '/weather':
+#         bot.send_message(message.from_user.id, 'Введите город в котором хотите узнать погоду:')
+#         bot.register_next_step_handler(message, city)
 
 
 def news(message):
@@ -82,12 +111,42 @@ def translate(message):
     elif message.text == '/num_sys':
         bot.send_message(message.from_user.id, 'Введите число:')
         bot.register_next_step_handler(message, numersys)
-    elif message.text == '/crypto':
-        bot.send_message(message.from_user.id, interpreter_translate.translate_crypto(message))
+    elif message.text == '/cash':
+        bot.send_message(message.from_user.id, 'Введите сумму в рублях:')
+        bot.register_next_step_handler(message, cash)
+
     try:
-        tran(message)
+        tran_cash2(message)
     except Exception:
         pass
+
+
+def cash(message):
+    with open('translate_cash.txt', 'w', encoding='utf-8') as q:
+        q.write(message.text)
+    bot.send_message(message.from_user.id, "В какую волюту перевести?")
+    bot.send_message(message.from_user.id, '"/usd" - Доллор' + '\n' + '\n' +
+                     '"/eur" - Евро' + '\n' + '\n' +
+                     '"/cny" - Юань', reply_markup=keyboard7)
+
+
+def tran_cash2(message):
+    with open('translate_cash.txt', encoding='utf-8') as qw:
+        txt = int(qw.read())
+    with open('translate_text.txt', encoding='utf-8') as q:
+        texter = q.read()
+    if message.text == '/usd':
+        bot.send_message(message.from_user.id, interpreter_translate.translate_cash(txt, 'usd'))
+    elif message.text == '/eur':
+        bot.send_message(message.from_user.id, interpreter_translate.translate_cash(txt, 'eur'))
+    elif message.text == '/cny':
+        bot.send_message(message.from_user.id, interpreter_translate.translate_cash(txt, 'cny'))
+    elif message.text == '/Russian':
+        bot.send_message(message.from_user.id, interpreter_translate.translate_text(texter, 'ru'))
+    elif message.text == '/English':
+        bot.send_message(message.from_user.id, interpreter_translate.translate_text(texter, 'en'))
+    elif message.text == '/French':
+        bot.send_message(message.from_user.id, interpreter_translate.translate_text(texter, 'fr'))
 
 
 def transl(message):
@@ -97,17 +156,6 @@ def transl(message):
     bot.send_message(message.from_user.id, '"/Russian" - русский язык' + '\n' + '\n' +
                                            '"/English" - английский язык' + '\n' + '\n' +
                                            '"/French" - французский язык', reply_markup=keyboard4)
-
-
-def tran(message):
-    with open('translate_text.txt', encoding='utf-8') as q:
-        text = q.read()
-    if message.text == '/Russian':
-        bot.send_message(message.from_user.id, interpreter_translate.translate_text(text, 'ru'))
-    elif message.text == '/English':
-        bot.send_message(message.from_user.id, interpreter_translate.translate_text(text, 'en'))
-    elif message.text == '/French':
-        bot.send_message(message.from_user.id, interpreter_translate.translate_text(text, 'fr'))
 
 
 def numersys(message):

@@ -1,4 +1,6 @@
 from deep_translator import GoogleTranslator
+from pycbrf import ExchangeRates
+from datetime import datetime
 
 
 def translate_text(text, target):
@@ -17,5 +19,11 @@ def translate_base(num, base):
         return hex(num)
 
 
-def translate_crypto(text):
-    return GoogleTranslator(source='auto', target='en').translate(text)
+def translate_cash(number, message):
+    message_norm = message.strip().lower()
+    if message_norm in ['usd', 'eur', 'cny']:
+        rates = ExchangeRates(datetime.now())
+        num = number / rates[message_norm.upper()].rate
+        return round(num, 2)
+
+
