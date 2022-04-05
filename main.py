@@ -2,6 +2,7 @@ import os
 from news import news_weather
 import telebot
 import random_generator
+from update_image import revers
 import interpreter_translate
 
 bot = telebot.TeleBot("5264924778:AAEyAQFfkdpGbMq-vdL6xP0KYgX0aWqxTwg")
@@ -10,6 +11,7 @@ keyboard2 = telebot.types.ReplyKeyboardMarkup(True)
 keyboard3 = telebot.types.ReplyKeyboardMarkup(True)
 keyboard4 = telebot.types.ReplyKeyboardMarkup(True)
 keyboard5 = telebot.types.ReplyKeyboardMarkup(True)
+keyboard6 = telebot.types.ReplyKeyboardMarkup(True)
 keyboard7 = telebot.types.ReplyKeyboardMarkup(True)
 keyboard0 = telebot.types.ReplyKeyboardMarkup(True)
 keyboard1.row('/generator', '/interpreter', '/news', '/image')
@@ -17,6 +19,7 @@ keyboard2.row('/info', '/money', '/number', '/l_p')
 keyboard3.row('/info', '/translation', '/num_sys', '/cash')
 keyboard4.row('/info', '/Russian', '/English', '/French')
 keyboard5.row('/info', '/#####', '/#####', '/weather')
+keyboard6.row('/info', '/turn', '/invers', '/bl_wht')
 keyboard7.row('/info', '/usd', '/eur', '/cny')
 keyboard0.row('/info')
 
@@ -38,6 +41,18 @@ def send_welcome(message):
                                            '"/image" - работа с картинкой', reply_markup=keyboard1)
 
 
+def img_return(message):
+    file_info = bot.get_file(message.photo[len(message.photo) - 1].file_id)
+    downloaded_file = bot.download_file(file_info.file_path)
+    with open("file_0.jpg", 'wb') as new_file:
+        new_file.write(downloaded_file)
+
+    bot.send_photo(message.from_user.id, revers('file_0.jpg'))
+    if os.path.isfile("file_0.jpg"):
+        os.remove("file_0.jpg")
+        os.remove("file_1.jpg")
+
+
 @bot.message_handler(func=lambda message: True)
 def echo_all(message):
     if message.text == '/generator':
@@ -53,14 +68,28 @@ def echo_all(message):
                          '"/######" - важные события из игровой индустрии' + '\n' + '\n' +
                          '"/weather" - погода', reply_markup=keyboard5)
     elif message.text == '/image':
-        bot.send_message(message.from_user.id, 'image')
+        bot.send_message(message.from_user.id, '"/turn" - повернуть картинку на 90' + '\n' + '\n' +
+                         '"/invers" - инверсия цвета картинки' + '\n' + '\n' +
+                         '"/bl_wht" - перекрашивание картинки в черно-белый', reply_markup=keyboard6)
     try:
         generator(message)
         translate(message)
         news(message)
         image(message)
     except Exception:
-        pass
+        print('error')
+
+
+def image(message):
+    if message.text == '/turn':
+        bot.send_message(message.from_user.id, 'Отправте фото:')
+        bot.register_next_step_handler(message, img_return)
+    elif message.text == '/invers':
+        bot.send_message(message.from_user.id, 'Отправте фото:')
+        bot.register_next_step_handler(message, img_inver)
+    elif message.text == '/bl_wht':
+        bot.send_message(message.from_user.id, 'Отправте фото:')
+        bot.register_next_step_handler(message, img_blwht)
 
 
 def news(message):
@@ -87,12 +116,11 @@ def translate(message):
     elif message.text == '/cash':
         bot.send_message(message.from_user.id, 'Введите сумму в рублях:')
         bot.register_next_step_handler(message, cash)
-
     try:
         cash2(message)
         tran(message)
     except Exception:
-        pass
+        print('error')
 
 
 def cash(message):
