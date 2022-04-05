@@ -55,39 +55,12 @@ def echo_all(message):
     elif message.text == '/image':
         bot.send_message(message.from_user.id, 'image')
     try:
-        all_info(message)
         generator(message)
         translate(message)
         news(message)
         image(message)
     except Exception:
         pass
-
-
-# def all_info(message):
-#     if message.text == '/money':
-#         bot.send_message(message.from_user.id, random_generator.generator_money())
-#     elif message.text == '/number':
-#         bot.send_message(message.from_user.id, 'Введите 2 числа через пробел:')
-#         bot.register_next_step_handler(message, num)
-#     elif message.text == '/l_p':
-#         bot.send_message(message.from_user.id, random_generator.generator_login_password())
-#     elif message.text == '/translation':
-#         bot.send_message(message.from_user.id, 'Введите текст:')
-#         bot.register_next_step_handler(message, transl)
-#     elif message.text == '/num_sys':
-#         bot.send_message(message.from_user.id, 'Введите число:')
-#         bot.register_next_step_handler(message, numersys)
-#     elif message.text == '/cash':
-#         bot.send_message(message.from_user.id, 'Введите сумму в рублях:')
-#         bot.register_next_step_handler(message, cash)
-#     elif message.text == '/########':
-#         pass
-#     elif message.text == '/#########':
-#         pass
-#     elif message.text == '/weather':
-#         bot.send_message(message.from_user.id, 'Введите город в котором хотите узнать погоду:')
-#         bot.register_next_step_handler(message, city)
 
 
 def news(message):
@@ -116,7 +89,8 @@ def translate(message):
         bot.register_next_step_handler(message, cash)
 
     try:
-        tran_cash2(message)
+        cash2(message)
+        tran(message)
     except Exception:
         pass
 
@@ -130,23 +104,15 @@ def cash(message):
                      '"/cny" - Юань', reply_markup=keyboard7)
 
 
-def tran_cash2(message):
-    with open('translate_cash.txt', encoding='utf-8') as qw:
-        txt = int(qw.read())
-    with open('translate_text.txt', encoding='utf-8') as q:
-        texter = q.read()
+def cash2(message):
+    with open('translate_cash.txt', encoding='utf-8') as q:
+        txt = int(q.read())
     if message.text == '/usd':
         bot.send_message(message.from_user.id, interpreter_translate.translate_cash(txt, 'usd'))
     elif message.text == '/eur':
         bot.send_message(message.from_user.id, interpreter_translate.translate_cash(txt, 'eur'))
     elif message.text == '/cny':
         bot.send_message(message.from_user.id, interpreter_translate.translate_cash(txt, 'cny'))
-    elif message.text == '/Russian':
-        bot.send_message(message.from_user.id, interpreter_translate.translate_text(texter, 'ru'))
-    elif message.text == '/English':
-        bot.send_message(message.from_user.id, interpreter_translate.translate_text(texter, 'en'))
-    elif message.text == '/French':
-        bot.send_message(message.from_user.id, interpreter_translate.translate_text(texter, 'fr'))
 
 
 def transl(message):
@@ -156,6 +122,17 @@ def transl(message):
     bot.send_message(message.from_user.id, '"/Russian" - русский язык' + '\n' + '\n' +
                                            '"/English" - английский язык' + '\n' + '\n' +
                                            '"/French" - французский язык', reply_markup=keyboard4)
+
+
+def tran(message):
+    with open('translate_text.txt', encoding='utf-8') as q:
+        text = q.read()
+    if message.text == '/Russian':
+        bot.send_message(message.from_user.id, interpreter_translate.translate_text(text, 'ru'))
+    elif message.text == '/English':
+        bot.send_message(message.from_user.id, interpreter_translate.translate_text(text, 'en'))
+    elif message.text == '/French':
+        bot.send_message(message.from_user.id, interpreter_translate.translate_text(text, 'fr'))
 
 
 def numersys(message):
@@ -177,7 +154,6 @@ def numer_sys(message):
         a = number
     bot.send_message(message.from_user.id, interpreter_translate.translate_base(a, to_base))
     bot.send_message(message.from_user.id, 'Введите число:')
-    bot.register_next_step_handler(message, numersys)
 
 
 @bot.message_handler(func=lambda message: True)
