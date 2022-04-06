@@ -2,26 +2,26 @@ import os
 from news import news_weather
 import telebot
 import random_generator
-from update_image import revers
+from update_image import image_revers, image_invert, image_blwht
 import interpreter_translate
 
 bot = telebot.TeleBot("5264924778:AAEyAQFfkdpGbMq-vdL6xP0KYgX0aWqxTwg")
-keyboard1 = telebot.types.ReplyKeyboardMarkup(True)
-keyboard2 = telebot.types.ReplyKeyboardMarkup(True)
-keyboard3 = telebot.types.ReplyKeyboardMarkup(True)
-keyboard4 = telebot.types.ReplyKeyboardMarkup(True)
-keyboard5 = telebot.types.ReplyKeyboardMarkup(True)
-keyboard6 = telebot.types.ReplyKeyboardMarkup(True)
-keyboard7 = telebot.types.ReplyKeyboardMarkup(True)
-keyboard0 = telebot.types.ReplyKeyboardMarkup(True)
-keyboard1.row('/generator', '/interpreter', '/news', '/image')
-keyboard2.row('/info', '/money', '/number', '/l_p')
-keyboard3.row('/info', '/translation', '/num_sys', '/cash')
-keyboard4.row('/info', '/Russian', '/English', '/French')
-keyboard5.row('/info', '/#####', '/#####', '/weather')
-keyboard6.row('/info', '/turn', '/invers', '/bl_wht')
-keyboard7.row('/info', '/usd', '/eur', '/cny')
-keyboard0.row('/info')
+keyboard1 = telebot.types.ReplyKeyboardMarkup()
+keyboard2 = telebot.types.ReplyKeyboardMarkup()
+keyboard3 = telebot.types.ReplyKeyboardMarkup()
+keyboard4 = telebot.types.ReplyKeyboardMarkup()
+keyboard5 = telebot.types.ReplyKeyboardMarkup()
+keyboard6 = telebot.types.ReplyKeyboardMarkup()
+keyboard7 = telebot.types.ReplyKeyboardMarkup()
+keyboard0 = telebot.types.ReplyKeyboardMarkup()
+keyboard1.add('/generator', '/interpreter', '/news', '/image')
+keyboard2.add('/money', '/number', '/login_password', '/info')
+keyboard3.add('/translation', '/num_sys', '/cash', '/info')
+keyboard4.add('/Russian', '/English', '/French', '/info')
+keyboard5.add('/#####', '/#####', '/weather', '/info')
+keyboard6.add('/turn', '/invers', '/bl_wht', '/info')
+keyboard7.add('/usd', '/eur', '/cny', '/info')
+keyboard0.add('/info')
 
 
 @bot.message_handler(commands=['start'])
@@ -39,18 +39,6 @@ def send_welcome(message):
                                            '"/interpreter" - перевод' + '\n' +
                                            '"/news" - новости' + '\n' +
                                            '"/image" - работа с картинкой', reply_markup=keyboard1)
-
-
-def img_return(message):
-    file_info = bot.get_file(message.photo[len(message.photo) - 1].file_id)
-    downloaded_file = bot.download_file(file_info.file_path)
-    with open("file_0.jpg", 'wb') as new_file:
-        new_file.write(downloaded_file)
-
-    bot.send_photo(message.from_user.id, revers('file_0.jpg'))
-    if os.path.isfile("file_0.jpg"):
-        os.remove("file_0.jpg")
-        os.remove("file_1.jpg")
 
 
 @bot.message_handler(func=lambda message: True)
@@ -77,7 +65,7 @@ def echo_all(message):
         news(message)
         image(message)
     except Exception:
-        print('error')
+        print('er')
 
 
 def image(message):
@@ -90,6 +78,42 @@ def image(message):
     elif message.text == '/bl_wht':
         bot.send_message(message.from_user.id, 'Отправте фото:')
         bot.register_next_step_handler(message, img_blwht)
+
+
+def img_return(message):
+    file_info = bot.get_file(message.photo[len(message.photo) - 1].file_id)
+    downloaded_file = bot.download_file(file_info.file_path)
+    with open("file_0.jpg", 'wb') as new_file:
+        new_file.write(downloaded_file)
+
+    bot.send_photo(message.from_user.id, image_revers('file_0.jpg'))
+    if os.path.isfile("file_0.jpg"):
+        os.remove("file_0.jpg")
+        os.remove("file_1.jpg")
+
+
+def img_inver(message):
+    file_info = bot.get_file(message.photo[len(message.photo) - 1].file_id)
+    downloaded_file = bot.download_file(file_info.file_path)
+    with open("file_0.jpg", 'wb') as new_file:
+        new_file.write(downloaded_file)
+
+    bot.send_photo(message.from_user.id, image_invert('file_0.jpg'))
+    if os.path.isfile("file_0.jpg"):
+        os.remove("file_0.jpg")
+        os.remove("file_1.jpg")
+
+
+def img_blwht(message):
+    file_info = bot.get_file(message.photo[len(message.photo) - 1].file_id)
+    downloaded_file = bot.download_file(file_info.file_path)
+    with open("file_0.jpg", 'wb') as new_file:
+        new_file.write(downloaded_file)
+
+    bot.send_photo(message.from_user.id, image_blwht('file_0.jpg'))
+    if os.path.isfile("file_0.jpg"):
+        os.remove("file_0.jpg")
+        os.remove("file_1.jpg")
 
 
 def news(message):
@@ -117,8 +141,8 @@ def translate(message):
         bot.send_message(message.from_user.id, 'Введите сумму в рублях:')
         bot.register_next_step_handler(message, cash)
     try:
-        cash2(message)
         tran(message)
+        cash2(message)
     except Exception:
         print('error')
 
@@ -135,12 +159,9 @@ def cash(message):
 def cash2(message):
     with open('translate_cash.txt', encoding='utf-8') as q:
         txt = int(q.read())
-    if message.text == '/usd':
-        bot.send_message(message.from_user.id, interpreter_translate.translate_cash(txt, 'usd'))
-    elif message.text == '/eur':
-        bot.send_message(message.from_user.id, interpreter_translate.translate_cash(txt, 'eur'))
-    elif message.text == '/cny':
-        bot.send_message(message.from_user.id, interpreter_translate.translate_cash(txt, 'cny'))
+    voluts = ['/usd', '/eur', '/cny']
+    if message.text in voluts:
+        bot.send_message(message.from_user.id, interpreter_translate.translate_cash(txt, message.text[1:]))
 
 
 def transl(message):
@@ -155,12 +176,11 @@ def transl(message):
 def tran(message):
     with open('translate_text.txt', encoding='utf-8') as q:
         text = q.read()
-    if message.text == '/Russian':
-        bot.send_message(message.from_user.id, interpreter_translate.translate_text(text, 'ru'))
-    elif message.text == '/English':
-        bot.send_message(message.from_user.id, interpreter_translate.translate_text(text, 'en'))
-    elif message.text == '/French':
-        bot.send_message(message.from_user.id, interpreter_translate.translate_text(text, 'fr'))
+    leng = {'/Russian': 'ru',
+            '/English': 'en',
+            '/French': 'fr'}
+    if message.text in leng.keys():
+        bot.send_message(message.from_user.id, interpreter_translate.translate_text(text, leng[message.text]))
 
 
 def numersys(message):
@@ -181,7 +201,6 @@ def numer_sys(message):
     except Exception:
         a = number
     bot.send_message(message.from_user.id, interpreter_translate.translate_base(a, to_base))
-    bot.send_message(message.from_user.id, 'Введите число:')
 
 
 @bot.message_handler(func=lambda message: True)
