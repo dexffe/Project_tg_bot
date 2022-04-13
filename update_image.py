@@ -3,9 +3,9 @@ import PIL.ImageOps
 import numpy as np
 
 
-def image_revers(message):
+def image_inversion(message):
     img = Image.open(message)
-    rotated = img.rotate(270, expand=True)         # Баг. При повороте он обрезает фото
+    rotated = img.rotate(270, expand=True)
     rotated.save('file_1.jpg')
     im = Image.open('file_1.jpg')
     return im
