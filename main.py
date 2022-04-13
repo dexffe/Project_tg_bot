@@ -1,5 +1,5 @@
 import os
-from news import news_weather, news_russian_to_day
+from news import news_weather, news_russian_to_day, news_game_to_day
 import telebot
 import random_generator
 from update_image import image_inversion, image_invert, image_blwht
@@ -18,7 +18,7 @@ keyboard1.add('/generator', '/interpreter', '/news', '/image')
 keyboard2.add('/money', '/number', '/login_password', '/info')
 keyboard3.add('/translation', '/num_sys', '/cash', '/info')
 keyboard4.add('/Russian', '/English', '/French', '/info')
-keyboard5.add('/#####', '/russian', '/weather', '/info')
+keyboard5.add('/game_news', '/russian_news', '/weather', '/info')
 keyboard6.add('/turn', '/invers', '/bl_wht', '/info')
 keyboard7.add('/usd', '/eur', '/cny', '/info')
 keyboard0.add('/info')
@@ -52,8 +52,8 @@ def echo_all(message):
                          '"/num_sys" - перевод чисел в разные системы счисления' + '\n' + '\n' +
                          '"/cash" - перевод рублей в иностранную валюту', reply_markup=keyboard3)
     elif message.text == '/news':
-        bot.send_message(message.from_user.id, '"/russian" - о главном в России за сутки' + '\n' + '\n' +
-                         '"/######" - важные события из игровой индустрии' + '\n' + '\n' +
+        bot.send_message(message.from_user.id, '"/russian_news" - о главном в России за сутки' + '\n' + '\n' +
+                         '"/game_news" - важные события из игровой индустрии' + '\n' + '\n' +
                          '"/weather" - погода', reply_markup=keyboard5)
     elif message.text == '/image':
         bot.send_message(message.from_user.id, '"/turn" - повернуть картинку на 90' + '\n' + '\n' +
@@ -117,9 +117,10 @@ def img_blwht(message):
 
 
 def news(message):
-    if message.text == '/########':
-        pass
-    elif message.text == '/russian':
+    if message.text == '/game_news':
+        for key, value in news_game_to_day().items():
+            bot.send_message(message.from_user.id, f'{key}\nПодробнее: {value}')
+    elif message.text == '/russian_news':
         for key, value in news_russian_to_day().items():
             bot.send_message(message.from_user.id, f'{key}\nПодробнее: {value}')
     elif message.text == '/weather':
