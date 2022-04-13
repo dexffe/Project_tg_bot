@@ -1,6 +1,7 @@
 import pyowm
 from pyowm.utils.config import get_default_config
 import requests
+from bs4 import BeautifulSoup
 
 
 def news_weather(message):
@@ -24,4 +25,17 @@ def news_russian_to_day():
     s1 = {}
     for key in soup.get('articles')[:5]:
         s1.setdefault(key.get('title'), key.get('url'))
+    return s1
+
+
+def news_game_to_day():
+    url = 'https://www.igromania.ru/news/'
+    r = requests.get(url)
+    soup = BeautifulSoup(r.text, 'html.parser')
+
+    news = soup.find_all('a', class_='aubli_name')
+
+    s1 = {}
+    for link in news[:5]:
+        s1.setdefault(link.text, 'https://www.igromania.ru' + link['href'][:-5])
     return s1
