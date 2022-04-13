@@ -1,8 +1,8 @@
 import os
-from news import news_weather
+from news import news_weather, news_russian_to_day
 import telebot
 import random_generator
-from update_image import image_revers, image_invert, image_blwht
+from update_image import image_inversion, image_invert, image_blwht
 import interpreter_translate
 
 bot = telebot.TeleBot("5264924778:AAEyAQFfkdpGbMq-vdL6xP0KYgX0aWqxTwg")
@@ -18,7 +18,7 @@ keyboard1.add('/generator', '/interpreter', '/news', '/image')
 keyboard2.add('/money', '/number', '/login_password', '/info')
 keyboard3.add('/translation', '/num_sys', '/cash', '/info')
 keyboard4.add('/Russian', '/English', '/French', '/info')
-keyboard5.add('/#####', '/#####', '/weather', '/info')
+keyboard5.add('/#####', '/russian', '/weather', '/info')
 keyboard6.add('/turn', '/invers', '/bl_wht', '/info')
 keyboard7.add('/usd', '/eur', '/cny', '/info')
 keyboard0.add('/info')
@@ -36,9 +36,9 @@ def send_welcome(message):
         os.remove("translate_text.txt")
     bot.send_message(message.from_user.id, "Чем интересуетесь?")
     bot.send_message(message.from_user.id, '"/generator" - рандомная генерация' + '\n' +
-                                           '"/interpreter" - перевод' + '\n' +
-                                           '"/news" - новости' + '\n' +
-                                           '"/image" - работа с картинкой', reply_markup=keyboard1)
+                     '"/interpreter" - перевод' + '\n' +
+                     '"/news" - новости' + '\n' +
+                     '"/image" - работа с картинкой', reply_markup=keyboard1)
 
 
 @bot.message_handler(func=lambda message: True)
@@ -52,7 +52,7 @@ def echo_all(message):
                          '"/num_sys" - перевод чисел в разные системы счисления' + '\n' + '\n' +
                          '"/cash" - перевод рублей в иностранную валюту', reply_markup=keyboard3)
     elif message.text == '/news':
-        bot.send_message(message.from_user.id, '"/######" - о главном в России за сутки' + '\n' + '\n' +
+        bot.send_message(message.from_user.id, '"/russian" - о главном в России за сутки' + '\n' + '\n' +
                          '"/######" - важные события из игровой индустрии' + '\n' + '\n' +
                          '"/weather" - погода', reply_markup=keyboard5)
     elif message.text == '/image':
@@ -72,7 +72,7 @@ def image(message):
     if message.text == '/turn':
         bot.send_message(message.from_user.id, 'Отправте фото:')
         bot.register_next_step_handler(message, img_return)
-    elif message.text == '/invers':
+    elif message.text == '/inversion':
         bot.send_message(message.from_user.id, 'Отправте фото:')
         bot.register_next_step_handler(message, img_inver)
     elif message.text == '/bl_wht':
@@ -86,7 +86,7 @@ def img_return(message):
     with open("file_0.jpg", 'wb') as new_file:
         new_file.write(downloaded_file)
 
-    bot.send_photo(message.from_user.id, image_revers('file_0.jpg'))
+    bot.send_photo(message.from_user.id, image_inversion('file_0.jpg'))
     if os.path.isfile("file_0.jpg"):
         os.remove("file_0.jpg")
         os.remove("file_1.jpg")
@@ -119,8 +119,9 @@ def img_blwht(message):
 def news(message):
     if message.text == '/########':
         pass
-    elif message.text == '/#########':
-        pass
+    elif message.text == '/russian':
+        for key, value in news_russian_to_day().items():
+            bot.send_message(message.from_user.id, f'{key}\nПодробнее: {value}')
     elif message.text == '/weather':
         bot.send_message(message.from_user.id, 'Введите город в котором хотите узнать погоду:')
         bot.register_next_step_handler(message, city)
@@ -152,8 +153,8 @@ def cash(message):
         q.write(message.text)
     bot.send_message(message.from_user.id, "В какую волюту перевести?")
     bot.send_message(message.from_user.id, '"/usd" - Доллор' + '\n' + '\n' +
-                     '"/eur" - Евро' + '\n' + '\n' +
-                     '"/cny" - Юань', reply_markup=keyboard7)
+                                           '"/eur" - Евро' + '\n' + '\n' +
+                                           '"/cny" - Юань', reply_markup=keyboard7)
 
 
 def cash2(message):

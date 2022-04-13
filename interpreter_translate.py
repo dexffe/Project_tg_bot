@@ -25,5 +25,3 @@ def translate_cash(number, message):
         rates = ExchangeRates(datetime.now())
         num = number / rates[message_norm.upper()].rate
         return round(num, 2)
-
-
