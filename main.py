@@ -46,7 +46,7 @@ def echo_all(message):
     if message.text == '/generator':
         bot.send_message(message.from_user.id, '"/money" - орёл/решка' + '\n' + '\n' +
                          '"/number" - число в заданном промежутке' + '\n' + '\n' +
-                         '"/l_p" - логин и пароль', reply_markup=keyboard2)
+                         '"/login_password" - логин и пароль', reply_markup=keyboard2)
     elif message.text == '/interpreter':
         bot.send_message(message.from_user.id, '"/translation" - перевод текста' + '\n' + '\n' +
                          '"/num_sys" - перевод чисел в разные системы счисления' + '\n' + '\n' +
@@ -64,8 +64,8 @@ def echo_all(message):
         translate(message)
         news(message)
         image(message)
-    except Exception:
-        print('er')
+    except Exception as q:
+        print(q)
 
 
 def image(message):
@@ -145,8 +145,8 @@ def translate(message):
     try:
         tran(message)
         cash2(message)
-    except Exception:
-        print('error')
+    except Exception as q:
+        print(q)
 
 
 def cash(message):
@@ -212,7 +212,7 @@ def generator(message):
     elif message.text == '/number':
         bot.send_message(message.from_user.id, 'Введите 2 числа через пробел:')
         bot.register_next_step_handler(message, num)
-    elif message.text == '/l_p':
+    elif message.text == '/login_password':
         bot.send_message(message.from_user.id, random_generator.generator_login_password())
 
 
