@@ -32,8 +32,12 @@ def send_welcome(message):
 
 @bot.message_handler(commands=['info'])
 def send_welcome(message):
-    if os.path.isfile("translate_text.txt"):
+    if os.path.isfile("translate_text.txt") or \
+            os.path.isfile("translate_cash.txt") or \
+            os.path.isfile("translate_numb.txt"):
         os.remove("translate_text.txt")
+        os.remove("translate_cash.txt")
+        os.remove("translate_numb.txt")
     bot.send_message(message.from_user.id, "Чем интересуетесь?")
     bot.send_message(message.from_user.id, '"/generator" - рандомная генерация' + '\n' +
                      '"/interpreter" - перевод' + '\n' +
@@ -41,7 +45,6 @@ def send_welcome(message):
                      '"/image" - работа с картинкой', reply_markup=keyboard1)
 
 
-@bot.message_handler(func=lambda message: True)
 def echo_all(message):
     if message.text == '/generator':
         bot.send_message(message.from_user.id, '"/money" - орёл/решка' + '\n' + '\n' +
@@ -64,8 +67,8 @@ def echo_all(message):
         translate(message)
         news(message)
         image(message)
-    except Exception:
-        print('1')
+    except Exception as q:
+        print(q)
 
 
 def image(message):
@@ -126,6 +129,7 @@ def img_blwht(message):
 
 
 def news(message):
+    print(message.text)
     if message.text == '/game_news':
         for key, value in news_game_to_day().items():
             bot.send_message(message.from_user.id, f'{key}\nПодробнее: {value}')
@@ -164,8 +168,8 @@ def translate(message):
     try:
         cash2(message)
         tran(message)
-    except Exception:
-        print('2')
+    except Exception as q:
+        print(q)
 
 
 def cash(message):
