@@ -15,6 +15,7 @@ def news_weather(message):
 
     answer = f"В городе {message.text} сейчас {w.detailed_status}\n"
     answer += "Температура в районе " + str(round(temp)) + " градусов"
+
     return answer
 
 
@@ -25,6 +26,7 @@ def news_russian_to_day():
     s1 = {}
     for key in soup.get('articles')[:5]:
         s1.setdefault(key.get('title'), key.get('url'))
+
     return s1
 
 
@@ -38,4 +40,5 @@ def news_game_to_day():
     s1 = {}
     for link in news[:5]:
         s1.setdefault(link.text, 'https://www.igromania.ru' + link['href'][:-5])
+
     return s1
