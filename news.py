@@ -1,3 +1,7 @@
+import os
+import sqlite3
+
+from db_news import database_start, db_session, create_tables
 import pyowm
 from pyowm.utils.config import get_default_config
 import requests
@@ -19,26 +23,29 @@ def news_weather(message):
     return answer
 
 
-def news_russian_to_day():
-    url = 'https://newsapi.org/v2/top-headlines?country=ru&apiKey=a6e2efa325634852b598a4a3e04fddcb'
-    soup = requests.get(url).json()
+def news_russian_and_game(name_table):
+    global sqlite_connection
+    try:
+        database_start.database()
 
-    s1 = {}
-    for key in soup.get('articles')[:5]:
-        s1.setdefault(key.get('title'), key.get('url'))
+        sqlite_connection = sqlite3.connect('db_news/blogs.db')
+        cursor = sqlite_connection.cursor()
+        sql_select_query = f"""select * from {name_table}"""
+        cursor.execute(sql_select_query)
+        records = cursor.fetchall()
+        s1 = {}
+        for row in records[:5]:
+            s1.setdefault(row[1], row[2])
+        sql_delete_query = f"""DELETE from {name_table}"""
+        cursor.execute(sql_delete_query)
+        sqlite_connection.commit()
+        cursor.close()
+        return s1
 
-    return s1
+    except sqlite3.Error as error:
+        print("Ошибка при работе с SQLite", error)
 
-
-def news_game_to_day():
-    url = 'https://www.igromania.ru/news/'
-    r = requests.get(url)
-    soup = BeautifulSoup(r.text, 'html.parser')
-
-    news = soup.find_all('a', class_='aubli_name')
-
-    s1 = {}
-    for link in news[:5]:
-        s1.setdefault(link.text, 'https://www.igromania.ru' + link['href'][:-5])
-
-    return s1
+    finally:
+        if sqlite_connection:
+            sqlite_connection.close()
+            print("Соединение с SQLite закрыто")
