@@ -27,9 +27,6 @@ def news_russian_and_game(name_table, number=None):
     global sqlite_connection
     try:
         database_start.database()
-        if number is not None:
-            number = int(number)
-        print(name_table)
         sqlite_connection = sqlite3.connect('db_news/blogs.db')
         cursor = sqlite_connection.cursor()
         sql_select_query = f"""select * from {name_table}"""
@@ -44,10 +41,6 @@ def news_russian_and_game(name_table, number=None):
         cursor.close()
         return s1
 
-    except sqlite3.Error as error:
-        print("Ошибка при работе с SQLite", error)
-
     finally:
         if sqlite_connection:
             sqlite_connection.close()
-            print("Соединение с SQLite закрыто")
