@@ -23,18 +23,20 @@ def news_weather(message):
     return answer
 
 
-def news_russian_and_game(name_table):
+def news_russian_and_game(name_table, number=None):
     global sqlite_connection
     try:
         database_start.database()
-
+        if number is not None:
+            number = int(number)
+        print(name_table)
         sqlite_connection = sqlite3.connect('db_news/blogs.db')
         cursor = sqlite_connection.cursor()
         sql_select_query = f"""select * from {name_table}"""
         cursor.execute(sql_select_query)
         records = cursor.fetchall()
         s1 = {}
-        for row in records[:5]:
+        for row in records[:number]:
             s1.setdefault(row[1], row[2])
         sql_delete_query = f"""DELETE from {name_table}"""
         cursor.execute(sql_delete_query)

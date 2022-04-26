@@ -42,6 +42,8 @@ def send_welcome(message):
         os.remove("translate_cash.txt")
     if os.path.isfile("translate_numb.txt"):
         os.remove("translate_numb.txt")
+    if os.path.isfile("name_news.txt"):
+        os.remove("name_news.txt")
 
     bot.send_message(message.from_user.id, "Чем интересуетесь?")
     bot.send_message(message.from_user.id, '"/generator" - рандомная генерация' + '\n' +
@@ -149,14 +151,26 @@ def img_blwht(message):
         bot.send_message(message.from_user.id, 'Некорректный ввод, давай по новой.')
 
 
-def news(message):
-    if message.text == '/game_news':
-        for key, value in news_russian_and_game('Game_news').items():
-            bot.send_message(message.from_user.id, f'{key}\nПодробнее: {value}')
+def number_news(message):
+    with open('name_news.txt', encoding='utf-8') as q:
+        name_table = q.read()
+    for key, value in news_russian_and_game(name_table, message.text).items():
+        bot.send_message(message.from_user.id, f'{key}\nПодробнее: {value}')
+    os.remove("name_news.txt")
 
-    elif message.text == '/russian_news':
-        for key, value in news_russian_and_game('Russian_news').items():
-            bot.send_message(message.from_user.id, f'{key}\nПодробнее: {value}')
+
+def news(message):
+    list_names = {
+                  '/game_news': 'Game_news',
+                  '/russian_news': 'Russian_news'
+                 }
+    if message.text in list_names:
+        bot.send_message(message.from_user.id,
+                         f'У нас имеется {len(news_russian_and_game(list_names[message.text]).keys())} новостей')
+        bot.send_message(message.from_user.id, 'Введите число, сколько хотите получить новостей:')
+        with open("name_news.txt", 'w') as name:
+            name.write(list_names[message.text])
+        bot.register_next_step_handler(message, number_news)
 
     elif message.text == '/weather':
         bot.send_message(message.from_user.id, 'Введите город в котором хотите узнать погоду:')
