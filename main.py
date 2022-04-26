@@ -1,9 +1,10 @@
 import os
-from news import news_weather, news_russian_to_day, news_game_to_day
+from news import news_weather, news_russian_and_game
 import telebot
 import random_generator
 from update_image import image_inversion, image_invert, image_blwht
 import interpreter_translate
+import sqlite3
 
 bot = telebot.TeleBot("5264924778:AAEyAQFfkdpGbMq-vdL6xP0KYgX0aWqxTwg")
 keyboard1 = telebot.types.ReplyKeyboardMarkup()
@@ -92,11 +93,9 @@ def image(message):
     if message.text == '/turn':
         bot.send_message(message.from_user.id, 'Отправте фото:')
         bot.register_next_step_handler(message, img_return)
-
     elif message.text == '/inversion':
         bot.send_message(message.from_user.id, 'Отправте фото:')
         bot.register_next_step_handler(message, img_inversion)
-
     elif message.text == '/bl_wht':
         bot.send_message(message.from_user.id, 'Отправте фото:')
         bot.register_next_step_handler(message, img_blwht)
@@ -106,12 +105,9 @@ def img_return(message):
     try:
         file_info = bot.get_file(message.photo[len(message.photo) - 1].file_id)
         downloaded_file = bot.download_file(file_info.file_path)
-
         with open("file_0.jpg", 'wb') as new_file:
             new_file.write(downloaded_file)
-
         bot.send_photo(message.from_user.id, image_inversion('file_0.jpg'))
-
         if os.path.isfile("file_0.jpg"):
             os.remove("file_0.jpg")
             os.remove("file_1.jpg")
@@ -155,11 +151,11 @@ def img_blwht(message):
 
 def news(message):
     if message.text == '/game_news':
-        for key, value in news_game_to_day().items():
+        for key, value in news_russian_and_game('Game_news').items():
             bot.send_message(message.from_user.id, f'{key}\nПодробнее: {value}')
 
     elif message.text == '/russian_news':
-        for key, value in news_russian_to_day().items():
+        for key, value in news_russian_and_game('Russian_news').items():
             bot.send_message(message.from_user.id, f'{key}\nПодробнее: {value}')
 
     elif message.text == '/weather':
