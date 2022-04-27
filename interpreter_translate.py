@@ -4,7 +4,10 @@ from datetime import datetime
 
 
 def translate_text(text, target):
-    return GoogleTranslator(source='auto', target=target).translate(text)
+    try:
+        return GoogleTranslator(source='auto', target=target).translate(text)
+    except Exception:
+        return 'Некорректный ввод, давай по новой.'
 
 
 def translate_base(num, base):
