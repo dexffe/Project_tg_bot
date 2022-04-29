@@ -35,9 +35,9 @@ def send_welcome(message):
 def send_welcome(message):
     bot.send_message(message.from_user.id, "Чем интересуетесь?")
     bot.send_message(message.from_user.id, '"/generator" - рандомная генерация' + '\n' +
-                                           '"/interpreter" - перевод' + '\n' +
-                                           '"/news" - новости' + '\n' +
-                                           '"/image" - работа с картинкой',
+                     '"/interpreter" - перевод' + '\n' +
+                     '"/news" - новости' + '\n' +
+                     '"/image" - работа с картинкой',
                      reply_markup=keyboard1)
 
 
@@ -45,26 +45,26 @@ def send_welcome(message):
 def echo_all(message):
     if message.text == '/generator':
         bot.send_message(message.from_user.id, '"/money" - орёл/решка' + '\n' + '\n' +
-                                               '"/number" - число в заданном промежутке' + '\n' + '\n' +
-                                               '"/login_password" - логин и пароль',
+                         '"/number" - число в заданном промежутке' + '\n' + '\n' +
+                         '"/login_password" - логин и пароль',
                          reply_markup=keyboard2)
 
     elif message.text == '/interpreter':
         bot.send_message(message.from_user.id, '"/translation" - перевод текста' + '\n' + '\n' +
-                                               '"/num_sys" - перевод чисел в разные системы счисления' + '\n' + '\n' +
-                                               '"/cash" - перевод рублей в иностранную валюту',
+                         '"/num_sys" - перевод чисел в разные системы счисления' + '\n' + '\n' +
+                         '"/cash" - перевод рублей в иностранную валюту',
                          reply_markup=keyboard3)
 
     elif message.text == '/news':
         bot.send_message(message.from_user.id, '"/russian_news" - о главном в России за сутки' + '\n' + '\n' +
-                                               '"/game_news" - важные события из игровой индустрии' + '\n' + '\n' +
-                                               '"/weather" - погода',
+                         '"/game_news" - важные события из игровой индустрии' + '\n' + '\n' +
+                         '"/weather" - погода',
                          reply_markup=keyboard5)
 
     elif message.text == '/image':
         bot.send_message(message.from_user.id, '"/turn" - повернуть картинку на 90' + '\n' + '\n' +
-                                               '"/inversion" - инверсия цвета картинки' + '\n' + '\n' +
-                                               '"/bl_wht" - перекрашивание картинки в черно-белый',
+                         '"/inversion" - инверсия цвета картинки' + '\n' + '\n' +
+                         '"/bl_wht" - перекрашивание картинки в черно-белый',
                          reply_markup=keyboard6)
 
     if message.text not in [j for i in functions for j in i]:
@@ -75,8 +75,8 @@ def echo_all(message):
         translate(message)
         news(message)
         image(message)
-    except TypeError as q:
-        print(q)
+    except Exception:
+        pass
 
 
 def image(message):
@@ -100,13 +100,7 @@ def image_2(message):
             os.remove("file_0.jpg")
             os.remove("file_1.jpg")
         os.remove("img_type.txt")
-    except TypeError:
-        bot.send_message(message.from_user.id, 'Некорректный ввод, давай по новой.')
-    except AttributeError:
-        bot.send_message(message.from_user.id, 'Некорректный ввод, давай по новой.')
-    except ValueError:
-        bot.send_message(message.from_user.id, 'Некорректный ввод, давай по новой.')
-    except IndexError:
+    except Exception:
         bot.send_message(message.from_user.id, 'Некорректный ввод, давай по новой.')
 
 
@@ -120,21 +114,15 @@ def number_news(message):
                 bot.send_message(message.from_user.id, f'{key}\nПодробнее: {value}')
         else:
             bot.send_message(message.from_user.id, 'Некорректный ввод, давай по новой.')
-    except TypeError:
-        bot.send_message(message.from_user.id, 'Некорректный ввод, давай по новой.')
-    except AttributeError:
-        bot.send_message(message.from_user.id, 'Некорректный ввод, давай по новой.')
-    except ValueError:
-        bot.send_message(message.from_user.id, 'Некорректный ввод, давай по новой.')
-    except IndexError:
+    except Exception:
         bot.send_message(message.from_user.id, 'Некорректный ввод, давай по новой.')
 
 
 def news(message):
     list_names = {
-                  '/game_news': 'Game_news',
-                  '/russian_news': 'Russian_news'
-                 }
+        '/game_news': 'Game_news',
+        '/russian_news': 'Russian_news'
+    }
     if message.text in list_names:
         bot.send_message(message.from_user.id,
                          f'У нас имеется {len(news_russian_and_game(list_names[message.text]).keys())} новостей')
@@ -161,13 +149,7 @@ def city(message):
             bot.send_message(message.from_user.id, news_weather(message))
         else:
             bot.send_message(message.from_user.id, 'Некорректный ввод, давай по новой.')
-    except TypeError:
-        bot.send_message(message.from_user.id, 'Некорректный ввод, давай по новой.')
-    except AttributeError:
-        bot.send_message(message.from_user.id, 'Некорректный ввод, давай по новой.')
-    except ValueError:
-        bot.send_message(message.from_user.id, 'Некорректный ввод, давай по новой.')
-    except IndexError:
+    except Exception:
         bot.send_message(message.from_user.id, 'Некорректный ввод, давай по новой.')
 
 
@@ -194,17 +176,11 @@ def cash(message):
 
         bot.send_message(message.from_user.id, "В какую волюту перевести?")
         bot.send_message(message.from_user.id, '"/usd" - Доллор' + '\n' + '\n' +
-                                               '"/eur" - Евро' + '\n' + '\n' +
-                                               '"/cny" - Юань',
+                         '"/eur" - Евро' + '\n' + '\n' +
+                         '"/cny" - Юань',
                          reply_markup=keyboard7)
         bot.register_next_step_handler(message, cash2)
-    except TypeError:
-        bot.send_message(message.from_user.id, 'Некорректный ввод, давай по новой.')
-    except AttributeError:
-        bot.send_message(message.from_user.id, 'Некорректный ввод, давай по новой.')
-    except ValueError:
-        bot.send_message(message.from_user.id, 'Некорректный ввод, давай по новой.')
-    except IndexError:
+    except Exception:
         bot.send_message(message.from_user.id, 'Некорректный ввод, давай по новой.')
 
 
@@ -223,17 +199,11 @@ def transl(message):
 
         bot.send_message(message.from_user.id, "На какой язык перевести?")
         bot.send_message(message.from_user.id, '"/Russian" - русский язык' + '\n' + '\n' +
-                                               '"/English" - английский язык' + '\n' + '\n' +
-                                               '"/French" - французский язык',
+                         '"/English" - английский язык' + '\n' + '\n' +
+                         '"/French" - французский язык',
                          reply_markup=keyboard4)
         bot.register_next_step_handler(message, tran)
-    except TypeError:
-        bot.send_message(message.from_user.id, 'Некорректный ввод, давай по новой.')
-    except AttributeError:
-        bot.send_message(message.from_user.id, 'Некорректный ввод, давай по новой.')
-    except ValueError:
-        bot.send_message(message.from_user.id, 'Некорректный ввод, давай по новой.')
-    except IndexError:
+    except Exception:
         bot.send_message(message.from_user.id, 'Некорректный ввод, давай по новой.')
 
 
@@ -242,15 +212,10 @@ def tran(message):
         with open('translate_text.txt', encoding='utf-8') as q:
             text = q.read()
         if message.text in functions[3]:
-            bot.send_message(message.from_user.id, interpreter_translate.translate_text(text, message.text[1:3].lower()))
+            bot.send_message(message.from_user.id,
+                             interpreter_translate.translate_text(text, message.text[1:3].lower()))
         os.remove("translate_text.txt")
-    except TypeError:
-        bot.send_message(message.from_user.id, 'Некорректный ввод, давай по новой.')
-    except AttributeError:
-        bot.send_message(message.from_user.id, 'Некорректный ввод, давай по новой.')
-    except ValueError:
-        bot.send_message(message.from_user.id, 'Некорректный ввод, давай по новой.')
-    except IndexError:
+    except Exception:
         bot.send_message(message.from_user.id, 'Некорректный ввод, давай по новой.')
 
 
@@ -262,13 +227,7 @@ def numersys(message):
         bot.send_message(message.from_user.id, "Из какой системы счисления в какую перевести?" + '\n' +
                          "Напишите 2 числа через пробел.")
         bot.register_next_step_handler(message, numer_sys)
-    except TypeError:
-        bot.send_message(message.from_user.id, 'Некорректный ввод, давай по новой.')
-    except AttributeError:
-        bot.send_message(message.from_user.id, 'Некорректный ввод, давай по новой.')
-    except ValueError:
-        bot.send_message(message.from_user.id, 'Некорректный ввод, давай по новой.')
-    except IndexError:
+    except Exception:
         bot.send_message(message.from_user.id, 'Некорректный ввод, давай по новой.')
 
 
@@ -284,13 +243,7 @@ def numer_sys(message):
             a = number
         bot.send_message(message.from_user.id, interpreter_translate.translate_base(a, to_base))
         os.remove("translate_numb.txt")
-    except TypeError:
-        bot.send_message(message.from_user.id, 'Некорректный ввод, давай по новой.')
-    except AttributeError:
-        bot.send_message(message.from_user.id, 'Некорректный ввод, давай по новой.')
-    except ValueError:
-        bot.send_message(message.from_user.id, 'Некорректный ввод, давай по новой.')
-    except IndexError:
+    except Exception:
         bot.send_message(message.from_user.id, 'Некорректный ввод, давай по новой.')
 
 
@@ -311,13 +264,7 @@ def num(message):
         if a > b:
             a, b = b, a
         bot.send_message(message.from_user.id, random_generator.generator_numbers(a, b))
-    except TypeError:
-        bot.send_message(message.from_user.id, 'Некорректный ввод, давай по новой.')
-    except AttributeError:
-        bot.send_message(message.from_user.id, 'Некорректный ввод, давай по новой.')
-    except ValueError:
-        bot.send_message(message.from_user.id, 'Некорректный ввод, давай по новой.')
-    except IndexError:
+    except Exception:
         bot.send_message(message.from_user.id, 'Некорректный ввод, давай по новой.')
 
 
