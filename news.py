@@ -1,11 +1,8 @@
-import os
 import sqlite3
 
-from db_news import database_start, db_session, create_tables
+from db_news import database_start
 import pyowm
 from pyowm.utils.config import get_default_config
-import requests
-from bs4 import BeautifulSoup
 
 
 def news_weather(message):
