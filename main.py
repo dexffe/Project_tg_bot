@@ -24,6 +24,8 @@ keyboard5 = telebot.types.ReplyKeyboardMarkup().add(*functions[4], '/info')
 keyboard6 = telebot.types.ReplyKeyboardMarkup().add(*functions[5], '/info')
 keyboard7 = telebot.types.ReplyKeyboardMarkup().add(*functions[6], '/info')
 
+bot.delete_webhook()
+
 
 @bot.message_handler(commands=['start'])
 def send_welcome(message):
@@ -268,4 +270,4 @@ def num(message):
         bot.send_message(message.from_user.id, 'Некорректный ввод, давай по новой.')
 
 
-bot.polling()
+bot.infinity_polling()
