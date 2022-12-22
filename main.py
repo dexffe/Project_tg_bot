@@ -1,9 +1,13 @@
 import os
+import schedule
+import time
+from colorama import Fore
 from news import news_weather, news_russian_and_game
 import telebot
 import random_generator
 from update_image import image_inversion_invert_blwht
 import interpreter_translate
+import collections
 
 bot = telebot.TeleBot("5264924778:AAEyAQFfkdpGbMq-vdL6xP0KYgX0aWqxTwg")
 functions = [['/generator', '/interpreter', '/news', '/image'],
@@ -69,7 +73,11 @@ def echo_all(message):
                          '"/bl_wht" - перекрашивание картинки в черно-белый',
                          reply_markup=keyboard6)
 
-    if message.text not in [j for i in functions for j in i]:
+    if message.text == '/task':
+        bot.send_message(message.from_user.id, 'Введите текст и сколько будет занимать код сжатого текста (бит)')
+        bot.send_message(message.from_user.id, 'Пример:\nПривет, меня зовут Артем!\n95')
+        bot.register_next_step_handler(message, computer_science_task)
+    elif message.text not in [j for i in functions for j in i]:
         bot.send_message(message.from_user.id, 'что?')
 
     try:
@@ -79,6 +87,53 @@ def echo_all(message):
         image(message)
     except Exception:
         pass
+
+
+def computer_science_task(message):
+    from collections import Counter
+
+    class NodeTree(object):
+        def __init__(self, left=None, right=None):
+            self.left = left
+            self.right = right
+
+        def children(self):
+            return self.left, self.right
+
+        def __str__(self):
+            return self.left, self.right
+
+    def huffman_code_tree(node, binString=''):
+        if type(node) is str:
+            return {node: binString}
+        (l, r) = node.children()
+        d = dict()
+        d.update(huffman_code_tree(l, binString + '1'))
+        d.update(huffman_code_tree(r, binString + '0'))
+        return d
+
+    def make_tree(nodes):
+        while len(nodes) > 1:
+            (key1, c1) = nodes[-1]
+            (key2, c2) = nodes[-2]
+            nodes = nodes[:-2]
+            node = NodeTree(key1, key2)
+            nodes.append((node, c1 + c2))
+            nodes = sorted(nodes, key=lambda x: x[1], reverse=True)
+        return nodes[0][0]
+
+    mes = message.text.split('\n')
+    string = mes[0]
+    zip_text = mes[1]
+    freq = dict(Counter(string))
+    freq = sorted(freq.items(), key=lambda x: x[1], reverse=True)
+    node = make_tree(freq)
+    encoding = huffman_code_tree(node)
+    for i in encoding:
+        bot.send_message(message.from_user.id, f'{i} : {encoding[i]}')
+    length_text = len(string)
+    bait = round(int(zip_text) / 8)
+    bot.send_message(message.from_user.id, length_text / bait)
 
 
 def image(message):
@@ -269,5 +324,20 @@ def num(message):
     except Exception:
         bot.send_message(message.from_user.id, 'Некорректный ввод, давай по новой.')
 
+# try:
+#     def restart():
+#         from subprocess import call
+#         call("restart.bat")
+#         print(Fore.GREEN + 'restart complete')
+#
+#     schedule.every().day.at("21:36").do(restart)
+#
+#     while True:
+#         schedule.run_pending()
+#         time.sleep(1)
+# except Exception:
+#     print(Fore.RED + 'restart error')
+
 
 bot.infinity_polling()
+# bot.polling()
